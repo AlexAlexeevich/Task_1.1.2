@@ -29,11 +29,13 @@ public class FirstServlet extends HttpServlet {
         String password = req.getParameter("password");
         User user = new User(name, password);
 
+
 //        try {
 //            userService.createTables();
 //        } catch (DBException e) {
 //            e.printStackTrace();
 //        }
+
 
         try {
             while (!UserService.getInstance().addClient(user)) {
