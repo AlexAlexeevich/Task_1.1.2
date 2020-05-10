@@ -16,29 +16,29 @@
 <body>
 <form method="get" action="/showUsers">
 
-<table cellspacing="1" border="1" cellpadding="7">
-<tr>
-    <th><h3>Id</h3></th>
-    <th><h3>Name</h3></th>
-    <th><h3>Password</h3></th>
-    <th colspan="2"><h3>Action with user</h3></th>
-</tr>
-<c:forEach items="${usersFromServer}" var="user">
-    <tr>
-    <td>${user.id}</td>
-    <td>${user.name}</td>
-    <td>${user.password}</td>
+    <table cellspacing="1" border="1" cellpadding="7">
+        <tr>
+            <th><h3>Id</h3></th>
+            <th><h3>Name</h3></th>
+            <th><h3>Password</h3></th>
+            <th colspan="2"><h3>Action with user</h3></th>
+        </tr>
+        <c:forEach items="${usersFromServer}" var="user">
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.password}</td>
 
-    <td><a href="/deleteUser">Delete</a></td>
-    <td><a href="/updateUser">Update</a></td>
-    </tr>
-</c:forEach>
+                <td><a href="/deleteUser?defaultName=<c:out value='${user.name}'/>">Delete</a></td>
+                <td><a href="/updateUser?defaultName=<c:out value='${user.name}'/>">Update</a></td>
+            </tr>
+        </c:forEach>
     </table>
     <br>
     <table cellspacing="10">
-    <tr>
-    <td><a href="/">Add Users</a></td>
-    </tr>
+        <tr>
+            <td><a href="/">Add Users</a></td>
+        </tr>
     </table>
 </form>
 

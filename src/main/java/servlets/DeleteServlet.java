@@ -4,6 +4,7 @@ import exception.DBException;
 import models.User;
 import service.UserService;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +18,10 @@ public class DeleteServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getServletContext().getRequestDispatcher("/jsp/deleteUser.jsp").forward(req, resp);
+
+        req.setAttribute("defName", req.getParameter("defaultName"));
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/jsp/deleteUser.jsp");
+        requestDispatcher.forward(req, resp);
     }
 
     @Override
@@ -34,6 +38,7 @@ public class DeleteServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         req.setAttribute("repeatInput", "User deleted");
         doGet(req, resp);
     }

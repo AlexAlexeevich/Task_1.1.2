@@ -3,6 +3,7 @@ package servlets;
 import models.User;
 import service.UserService;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +17,9 @@ public class UpdateServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getServletContext().getRequestDispatcher("/jsp/updateUser.jsp").forward(req, resp);
+        req.setAttribute("defName", req.getParameter("defaultName"));
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/jsp/updateUser.jsp");
+        requestDispatcher.forward(req, resp);
     }
 
     @Override
