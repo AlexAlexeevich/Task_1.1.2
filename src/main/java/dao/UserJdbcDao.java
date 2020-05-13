@@ -15,7 +15,7 @@ public class UserJdbcDao {
     }
 
     public static UserJdbcDao getInstance(Connection connection) {
-        if(instance == null) {
+        if (instance == null) {
             instance = new UserJdbcDao(connection);
         }
         return instance;
@@ -35,8 +35,7 @@ public class UserJdbcDao {
                 connection.rollback();
             } catch (SQLException ignore) {
             }
-        }
-        finally {
+        } finally {
             if (preparedStatement != null) {
                 preparedStatement.close();
             }
@@ -46,7 +45,7 @@ public class UserJdbcDao {
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        try (Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery("select id, name, password from users");
             while (result.next()) {
                 users.add(new User(result.getLong(1), result.getString(2), result.getString(3)));
@@ -69,8 +68,7 @@ public class UserJdbcDao {
                 connection.rollback();
             } catch (SQLException ignore) {
             }
-        }
-        finally {
+        } finally {
             if (preparedStatement != null) {
                 preparedStatement.close();
             }
@@ -78,13 +76,14 @@ public class UserJdbcDao {
         }
     }
 
-    public void updateUser(User user, String newName) throws SQLException {
+    public void updateUser(User user, User oldUser) throws SQLException {
         PreparedStatement preparedStatement = null;
         try {
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("update users set name= ? where name = ?");
-            preparedStatement.setString(1, newName);
-            preparedStatement.setString(2, user.getName());
+            preparedStatement = connection.prepareStatement("update users set name= ?, password=? where name= ?");
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(3, oldUser.getName());
             preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
@@ -92,8 +91,7 @@ public class UserJdbcDao {
                 connection.rollback();
             } catch (SQLException ignore) {
             }
-        }
-        finally {
+        } finally {
             if (preparedStatement != null) {
                 preparedStatement.close();
             }

@@ -20,16 +20,17 @@
             <td>User Name:</td>
             <td><input type="text" id="name" name="name" value="<c:out value="${defName}" />"></td>
         </tr>
-        <tr>
-            <td>New Name:</td>
-            <td><input type="text" id="newName" name="newName"></td>
-        </tr>
+        <%--       <tr>
+                   <td>New Name:</td>
+                   <td><input type="text" id="newName" name="newName"></td>
+               </tr>--%>
         <tr>
             <td>User Password:</td>
             <td><input type="password" id="password" name="password"></td>
         </tr>
 
     </table>
+    <input type="hidden" name="oldName" value="${defName}">
     <br>
     <c:out value="${repeatInput}"/>
     <br>

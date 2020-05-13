@@ -25,7 +25,7 @@ public class UserService {
         return instance;
     }
 
-    public List<User> getAllClient() throws SQLException {
+    public List<User> getAllClient() {
         return userJdbcDao.getAllUsers();
     }
 
@@ -35,7 +35,7 @@ public class UserService {
         }
         List<User> users = getAllClient();
         for (User temp : users) {
-            if (temp.getName().equals(user.getName())) {    //проверка на введение дубликата user
+            if (temp.getName().equals(user.getName())) {
                 return false;
             }
         }
@@ -43,31 +43,26 @@ public class UserService {
         return true;
     }
 
-    public boolean deleteClient(User user) throws SQLException {
-        if (user.getName().equals("") || user.getPassword().equals("")) {
-            return false;
-        }
+    public void deleteClient(User user) throws SQLException {
         List<User> users = getAllClient();
         for (User temp : users) {
             if (temp.getName().equals(user.getName())) {
                 if (temp.getPassword().equals(user.getPassword())) {
                     userJdbcDao.deleteUser(user);
-                    return true;
                 }
             }
         }
-        return false;
     }
 
-    public boolean updateClient(User user, String newName) throws SQLException {
+    public boolean updateClient(User user, String oldName) throws SQLException {
         if (user.getName().equals("") || user.getPassword().equals("")) {
             return false;
         }
         List<User> users = getAllClient();
         for (User temp : users) {
-            if (temp.getName().equals(user.getName())) {
-                if (temp.getPassword().equals(user.getPassword()))
-                    userJdbcDao.updateUser(user, newName);
+            if (temp.getName().equals(oldName)) {
+                System.out.println(user.getName() + ", " + user.getPassword() + "======" + oldName + " " + temp.getPassword());
+                userJdbcDao.updateUser(user, new User(oldName, temp.getPassword()));
                 return true;
             }
         }

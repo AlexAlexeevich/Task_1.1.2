@@ -15,31 +15,33 @@ import java.sql.SQLException;
 
 @WebServlet("/deleteUser")
 public class DeleteServlet extends HttpServlet {
+    private final UserService userService = UserService.getInstance();
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        req.setAttribute("defName", req.getParameter("defaultName"));
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/jsp/deleteUser.jsp");
-        requestDispatcher.forward(req, resp);
-    }
+//    @Override
+//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        String name = req.getParameter("delName");
+//        String password = req.getParameter("delPassword");
+//        User user = new User(name, password);
+//        try {
+//            userService.deleteClient(user);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        req.getServletContext().getRequestDispatcher("/showUsers").forward(req, resp);
+//    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
         String password = req.getParameter("password");
         User user = new User(name, password);
-
+        System.out.println(name + " 99 " + password);
         try {
-            while (!UserService.getInstance().deleteClient(user)) {
-                req.setAttribute("repeatInput", "Repeat input");
-                req.getServletContext().getRequestDispatcher("/jsp/deleteUser.jsp").forward(req, resp);
-            }
+            userService.deleteClient(user);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        req.setAttribute("repeatInput", "User deleted");
-        doGet(req, resp);
+        resp.sendRedirect("/showUsers") ;
+        //req.getServletContext().getRequestDispatcher("/jsp/showUsers.jsp").forward(req, resp);
     }
 }

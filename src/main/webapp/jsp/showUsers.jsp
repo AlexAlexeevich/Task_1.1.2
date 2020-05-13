@@ -14,33 +14,38 @@
     <title>Title</title>
 </head>
 <body>
-<form method="get" action="/showUsers">
 
-    <table cellspacing="1" border="1" cellpadding="7">
+<table cellspacing="1" border="5" cellpadding="7">
+    <tr>
+        <th><h3>Id</h3></th>
+        <th><h3>Name</h3></th>
+        <th><h3>Password</h3></th>
+        <th colspan="2"><h3>Action with user</h3></th>
+    </tr>
+    <c:forEach items="${usersFromServer}" var="user">
         <tr>
-            <th><h3>Id</h3></th>
-            <th><h3>Name</h3></th>
-            <th><h3>Password</h3></th>
-            <th colspan="2"><h3>Action with user</h3></th>
+            <td>${user.id}</td>
+            <td>${user.name}</td>
+            <td>${user.password}</td>
+            <td align="center">
+                <form method="post" action="${pageContext.request.contextPath}/deleteUser">
+                    <input type="hidden" name="name" value="${user.name}">
+                    <input type="hidden" name="password" value="${user.password}">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+            <td>
+                <a href="${pageContext.request.contextPath}/updateUser?defaultName=<c:out value='${user.name}'/>">Update</a>
+            </td>
         </tr>
-        <c:forEach items="${usersFromServer}" var="user">
-            <tr>
-                <td>${user.id}</td>
-                <td>${user.name}</td>
-                <td>${user.password}</td>
-
-                <td><a href="/deleteUser?defaultName=<c:out value='${user.name}'/>">Delete</a></td>
-                <td><a href="/updateUser?defaultName=<c:out value='${user.name}'/>">Update</a></td>
-            </tr>
-        </c:forEach>
-    </table>
-    <br>
-    <table cellspacing="10">
-        <tr>
-            <td><a href="/">Add Users</a></td>
-        </tr>
-    </table>
-</form>
+    </c:forEach>
+</table>
+<br>
+<table cellspacing="10">
+    <tr>
+        <td><a href="/">Add Users</a></td>
+    </tr>
+</table>
 
 
 </body>

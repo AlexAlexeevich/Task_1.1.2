@@ -14,6 +14,7 @@ import java.sql.SQLException;
 
 @WebServlet("/updateUser")
 public class UpdateServlet extends HttpServlet {
+    private final UserService userService = UserService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -25,12 +26,12 @@ public class UpdateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
-        String newName = req.getParameter("newName");
+        String oldName = req.getParameter("oldName");
         String password = req.getParameter("password");
         User user = new User(name, password);
 
         try {
-            while (!UserService.getInstance().updateClient(user, newName)) {
+            while (!userService.updateClient(user, oldName)) {
                 req.setAttribute("repeatInput", "Repeat input");
                 req.getServletContext().getRequestDispatcher("/jsp/updateUser.jsp").forward(req, resp);
             }

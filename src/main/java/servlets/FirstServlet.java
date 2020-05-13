@@ -17,6 +17,7 @@ import java.util.List;
 
 @WebServlet("/")
 public class FirstServlet extends HttpServlet {
+    private final UserService userService = UserService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,7 +39,7 @@ public class FirstServlet extends HttpServlet {
 
 
         try {
-            while (!UserService.getInstance().addClient(user)) {
+            while (!userService.addClient(user)) {
                 req.setAttribute("repeatInput", "Repeat input");
                 req.getServletContext().getRequestDispatcher("/jsp/addUsers.jsp").forward(req, resp);
             }
