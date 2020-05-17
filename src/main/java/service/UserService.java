@@ -63,7 +63,6 @@ public class UserService {
         List<User> users = getAllClient();
         for (User temp : users) {
             if (temp.getName().equals(oldName)) {
-                //System.out.println(user.getName() + ", " + user.getPassword() + "======" + oldName + " " + temp.getPassword());
                 userDao.updateUser(user, new User(temp.getId(), oldName, temp.getPassword()));
                 return true;
             }

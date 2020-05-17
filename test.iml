@@ -5,10 +5,11 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <datasource-mapping>
-          <factory-entry name="Entities" />
+          <factory-entry name="Entities" value="12838a9b-b3a0-4e6e-abe8-cb74a5f69e82" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>
     </facet>
   </component>
 </module>
+
