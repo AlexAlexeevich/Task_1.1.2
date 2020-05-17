@@ -1,5 +1,7 @@
 package service;
 
+import dao.UserDao;
+import dao.UserHibernateDao;
 import dao.UserJdbcDao;
 import exception.DBException;
 import models.User;
@@ -12,7 +14,7 @@ import java.util.List;
 
 public class UserService {
 
-    private final UserJdbcDao userJdbcDao = UserJdbcDao.getInstance(getMysqlConnection());
+    private final UserDao userDao = UserHibernateDao.getInstance();
     private static UserService instance;
 
     private UserService() {
@@ -26,7 +28,7 @@ public class UserService {
     }
 
     public List<User> getAllClient() {
-        return userJdbcDao.getAllUsers();
+        return userDao.getAllUsers();
     }
 
     public boolean addClient(User user) throws SQLException {
@@ -39,7 +41,7 @@ public class UserService {
                 return false;
             }
         }
-        userJdbcDao.addUser(user);
+        userDao.addUser(user);
         return true;
     }
 
@@ -48,7 +50,7 @@ public class UserService {
         for (User temp : users) {
             if (temp.getName().equals(user.getName())) {
                 if (temp.getPassword().equals(user.getPassword())) {
-                    userJdbcDao.deleteUser(user);
+                    userDao.deleteUser(user);
                 }
             }
         }
@@ -61,8 +63,8 @@ public class UserService {
         List<User> users = getAllClient();
         for (User temp : users) {
             if (temp.getName().equals(oldName)) {
-                System.out.println(user.getName() + ", " + user.getPassword() + "======" + oldName + " " + temp.getPassword());
-                userJdbcDao.updateUser(user, new User(oldName, temp.getPassword()));
+                //System.out.println(user.getName() + ", " + user.getPassword() + "======" + oldName + " " + temp.getPassword());
+                userDao.updateUser(user, new User(temp.getId(), oldName, temp.getPassword()));
                 return true;
             }
         }
