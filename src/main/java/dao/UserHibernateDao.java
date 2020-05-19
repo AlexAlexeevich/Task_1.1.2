@@ -39,6 +39,16 @@ public class UserHibernateDao implements UserDao {
         }
     }
 
+    public User getUser(String name) {
+        Session session = sessionFactory.openSession();
+        String hql = "FROM User WHERE name =: name";
+        Query query = session.createQuery(hql);
+        query.setParameter("name", name);
+        User user = (User) query.uniqueResult();
+        session.close();
+        return user;
+    }
+
     public List getAllUsers() {
         Session session = sessionFactory.openSession();
         List temp = session.createQuery("FROM User").list();

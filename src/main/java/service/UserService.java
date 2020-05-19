@@ -38,11 +38,9 @@ public class UserService {
         if (user.getName().equals("") || user.getPassword().equals("")) {
             return false;
         }
-        List<User> users = getAllClient();
-        for (User temp : users) {
-            if (temp.getName().equals(user.getName())) {
-                return false;
-            }
+        System.out.println(1);
+        if (userDao.getUser(user.getName()) != null) {
+            return false;
         }
         userDao.addUser(user);
         return true;
@@ -56,14 +54,12 @@ public class UserService {
         if (user.getName().equals("") || user.getPassword().equals("")) {
             return false;
         }
-        List<User> users = getAllClient();
-        for (User temp : users) {
-            if (temp.getName().equals(oldName)) {
-                userDao.updateUser(user, new User(temp.getId(), oldName, temp.getPassword()));
-                return true;
-            }
+        User temp = userDao.getUser(oldName);
+        if (temp == null) {
+            return false;
         }
-        return false;
+        userDao.updateUser(user, new User(temp.getId(), oldName, temp.getPassword()));
+        return true;
     }
 
 //    public void createTables() throws DBException {

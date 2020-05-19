@@ -100,6 +100,20 @@ public class UserJdbcDao implements UserDao {
         }
     }
 
+    public User getUser(String name) throws SQLException {
+        System.out.println("getUser: " + name);
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from users where name=?");
+        preparedStatement.setString(1, name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        User temp = null;
+        if(resultSet.next()) {
+            temp = new User(resultSet.getString(2), resultSet.getString(3));
+        }
+        preparedStatement.close();
+        resultSet.close();
+        return temp;
+    }
+
     public void createTable() throws SQLException {
         Statement stmt = connection.createStatement();
         stmt.execute("create table if not exists users (id bigint auto_increment, name varchar(256),  password varchar(256), primary key (id))");

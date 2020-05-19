@@ -20,7 +20,6 @@ public class DeleteServlet extends HttpServlet {
         String name = req.getParameter("name");
         String password = req.getParameter("password");
         User user = new User(name, password);
-        //System.out.println(name + " 99 " + password);
         try {
             userService.deleteClient(user);
         } catch (SQLException e) {
