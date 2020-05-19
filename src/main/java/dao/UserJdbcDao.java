@@ -1,22 +1,23 @@
 package dao;
 
 import models.User;
+import org.hibernate.Transaction;
+import util.DBHelper;
 
 import java.sql.*;
 import java.util.*;
 
-public class UserJdbcDao {
+public class UserJdbcDao implements UserDao {
 
     private static UserJdbcDao instance;
-    private Connection connection;
+    private final Connection connection = DBHelper.getConnection();
 
-    private UserJdbcDao(Connection connection) {
-        this.connection = connection;
+    private UserJdbcDao() {
     }
 
-    public static UserJdbcDao getInstance(Connection connection) {
+    public static UserJdbcDao getInstance() {
         if (instance == null) {
-            instance = new UserJdbcDao(connection);
+            instance = new UserJdbcDao();
         }
         return instance;
     }

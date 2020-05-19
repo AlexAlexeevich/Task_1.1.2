@@ -4,6 +4,7 @@ import dao.UserDao;
 import dao.UserHibernateDao;
 import dao.UserJdbcDao;
 import exception.DBException;
+import factory.UserDaoFactory;
 import models.User;
 
 import java.sql.Connection;
@@ -11,13 +12,15 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 public class UserService {
 
-    private final UserDao userDao = UserHibernateDao.getInstance();
+    private final UserDao userDao;
     private static UserService instance;
 
     private UserService() {
+        userDao = UserDaoFactory.createDao();
     }
 
     public static UserService getInstance() {
@@ -46,14 +49,7 @@ public class UserService {
     }
 
     public void deleteClient(User user) throws SQLException {
-        List<User> users = getAllClient();
-        for (User temp : users) {
-            if (temp.getName().equals(user.getName())) {
-                if (temp.getPassword().equals(user.getPassword())) {
-                    userDao.deleteUser(user);
-                }
-            }
-        }
+        userDao.deleteUser(user);
     }
 
     public boolean updateClient(User user, String oldName) throws SQLException {
@@ -77,31 +73,5 @@ public class UserService {
 //            throw new DBException(e);
 //        }
 //    }
-
-    private static Connection getMysqlConnection() {
-        try {
-            DriverManager.registerDriver((Driver) Class.forName("com.mysql.cj.jdbc.Driver").newInstance());
-
-            StringBuilder url = new StringBuilder();
-
-            url.
-                    append("jdbc:mysql://").        //db type
-                    append("localhost:").           //host name
-                    append("3306/").                //port
-                    append("db_example?").          //db name
-                    append("user=root&").          //login
-                    append("password=root").        //password
-                    append("&serverTimezone=UTC");
-
-            System.out.println("URL: " + url + "\n");
-
-            Connection connection = DriverManager.getConnection(url.toString());
-            return connection;
-        } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new IllegalStateException();
-        }
-    }
-
 
 }

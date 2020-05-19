@@ -6,10 +6,30 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-public class DBHelper {
-    private static SessionFactory sessionFactory;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-    public static SessionFactory getSessionFactory() {
+public class DBHelper {
+
+    private static DBHelper instance;
+    private static SessionFactory sessionFactory;
+    private static Connection connection;
+
+    private DBHelper() {
+    }
+
+    public static DBHelper getInstance() {
+        if (instance == null) {
+            instance = new DBHelper();
+        }
+        return instance;
+    }
+
+    //--------------------UserHibernationDao-------------------------------
+
+    public static SessionFactory getConfiguration() {
         if (sessionFactory == null) {
             sessionFactory = createSessionFactory();
         }
@@ -36,5 +56,39 @@ public class DBHelper {
         builder.applySettings(configuration.getProperties());
         ServiceRegistry serviceRegistry = builder.build();
         return configuration.buildSessionFactory(serviceRegistry);
+    }
+
+    //--------------------UserJdbcDao-------------------------------
+
+    public static Connection getConnection() {
+        if (connection == null) {
+            connection = getMysqlConnection();
+        }
+        return connection;
+    }
+
+    private static Connection getMysqlConnection() {
+        try {
+            DriverManager.registerDriver((Driver) Class.forName("com.mysql.cj.jdbc.Driver").newInstance());
+
+            StringBuilder url = new StringBuilder();
+
+            url.
+                    append("jdbc:mysql://").        //db type
+                    append("localhost:").           //host name
+                    append("3306/").                //port
+                    append("db_example?").          //db name
+                    append("user=root&").          //login
+                    append("password=root").        //password
+                    append("&serverTimezone=UTC");
+
+            System.out.println("URL: " + url + "\n");
+
+            Connection connection = DriverManager.getConnection(url.toString());
+            return connection;
+        } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new IllegalStateException();
+        }
     }
 }
