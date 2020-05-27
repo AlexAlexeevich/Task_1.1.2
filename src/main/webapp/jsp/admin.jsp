@@ -1,5 +1,6 @@
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="models.User" %><%--
+<%@ page import="models.User" %>
+<%--
   Created by IntelliJ IDEA.
   User: Alex
   Date: 06.05.2020
@@ -14,7 +15,8 @@
     <title>Title</title>
 </head>
 <body>
-
+<%--<form method="post" action="/showUsers">
+<form method="post" action="/admin">--%>
 <table cellspacing="1" border="5" cellpadding="7">
     <tr>
         <th><h3>Id</h3></th>
@@ -28,14 +30,13 @@
             <td>${user.name}</td>
             <td>${user.password}</td>
             <td align="center">
-                <form method="post" action="${pageContext.request.contextPath}/deleteUser">
-                    <input type="hidden" name="name" value="${user.name}">
-                    <input type="hidden" name="password" value="${user.password}">
+                <form method="post" action="${pageContext.request.contextPath}/admin/deleteUser">
+                    <input type="hidden" name="id" value="${user.id}">
                     <input type="submit" value="Delete">
                 </form>
             </td>
             <td>
-                <a href="${pageContext.request.contextPath}/updateUser?defaultName=<c:out value='${user.name}'/>">Update</a>
+                <a href="${pageContext.request.contextPath}/admin/updateUser?id=<c:out value='${user.id}'/>">Update</a>
             </td>
         </tr>
     </c:forEach>
@@ -43,10 +44,14 @@
 <br>
 <table cellspacing="10">
     <tr>
-        <td><a href="/">Add Users</a></td>
+        <td><a href="${pageContext.request.contextPath}/admin/addUsers">Add Users</a></td>
+    </tr>
+    <tr>
+        <td><a href="${pageContext.request.contextPath}/login">Login</a></td>
     </tr>
 </table>
 
-
+<%--</form>
+</form>--%>
 </body>
 </html>

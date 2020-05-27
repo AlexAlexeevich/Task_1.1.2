@@ -56,12 +56,12 @@ public class UserJdbcDao implements UserDao {
         return users;
     }
 
-    public void deleteUser(User user) throws SQLException {
+    public void deleteUser(Long id) throws SQLException {
         PreparedStatement preparedStatement = null;
         try {
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("delete from users where name = ?");
-            preparedStatement.setString(1, user.getName());
+            preparedStatement = connection.prepareStatement("delete from users where id = ?");
+            preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
@@ -77,14 +77,14 @@ public class UserJdbcDao implements UserDao {
         }
     }
 
-    public void updateUser(User user, User oldUser) throws SQLException {
+    public void updateUser(Long id, String name, String password) throws SQLException {
         PreparedStatement preparedStatement = null;
         try {
             connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement("update users set name= ?, password=? where name= ?");
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setString(3, oldUser.getName());
+            preparedStatement = connection.prepareStatement("update users set name= ?, password=? where id= ?");
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, password);
+            preparedStatement.setLong(3, id);
             preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
@@ -100,14 +100,27 @@ public class UserJdbcDao implements UserDao {
         }
     }
 
-    public User getUser(String name) throws SQLException {
-        System.out.println("getUser: " + name);
+    @Override
+    public User getUser(Long id) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from users where id=?");
+        preparedStatement.setLong(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        User temp = null;
+        if(resultSet.next()) {
+            temp = new User(resultSet.getLong(1), resultSet.getString(2), resultSet.getString(3));
+        }
+        preparedStatement.close();
+        resultSet.close();
+        return temp;
+    }
+
+    public User getUserByName(String name) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("select * from users where name=?");
         preparedStatement.setString(1, name);
         ResultSet resultSet = preparedStatement.executeQuery();
         User temp = null;
         if(resultSet.next()) {
-            temp = new User(resultSet.getString(2), resultSet.getString(3));
+            temp = new User(resultSet.getString(2), resultSet.getString(3), resultSet.getString(4));
         }
         preparedStatement.close();
         resultSet.close();
@@ -116,7 +129,8 @@ public class UserJdbcDao implements UserDao {
 
     public void createTable() throws SQLException {
         Statement stmt = connection.createStatement();
-        stmt.execute("create table if not exists users (id bigint auto_increment, name varchar(256),  password varchar(256), primary key (id))");
+        stmt.execute("create table if not exists users (id bigint auto_increment, name varchar(256),  password varchar(256), role varchar(256), primary key (id))");
         stmt.close();
     }
+
 }

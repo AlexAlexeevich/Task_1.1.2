@@ -34,40 +34,52 @@ public class UserService {
         return userDao.getAllUsers();
     }
 
+    public boolean isExist(String name, String password) throws SQLException {
+        User temp = userDao.getUserByName(name);
+        if (temp != null && temp.getPassword().equals(password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean addClient(User user) throws SQLException {
         if (user.getName().equals("") || user.getPassword().equals("")) {
             return false;
         }
-        System.out.println(1);
-        if (userDao.getUser(user.getName()) != null) {
+        if (userDao.getUserByName(user.getName()) != null) {
             return false;
         }
         userDao.addUser(user);
         return true;
     }
 
-    public void deleteClient(User user) throws SQLException {
-        userDao.deleteUser(user);
+    public void deleteUserById(Long id) throws SQLException {
+        userDao.deleteUser(id);
     }
 
-    public boolean updateClient(User user, String oldName) throws SQLException {
-        if (user.getName().equals("") || user.getPassword().equals("")) {
+    public boolean updateClient(Long id, String login, String password) throws SQLException {
+        if (login.equals("") || login.equals("")) {
             return false;
         }
-        User temp = userDao.getUser(oldName);
-        if (temp == null) {
+        if (userDao.getUserByName(login) != null) {
             return false;
         }
-        userDao.updateUser(user, new User(temp.getId(), oldName, temp.getPassword()));
+        userDao.updateUser(id, login, password);
         return true;
     }
 
-//    public void createTables() throws DBException {
-//        try {
-//            userJdbcDao.createTable();
-//        } catch (SQLException e) {
-//            throw new DBException(e);
-//        }
-//    }
+    public User getUserByLogin(String login) throws SQLException {
+        return userDao.getUserByName(login);
+    }
+
+    public User getUserById(Long id) throws SQLException {
+        return userDao.getUser(id);
+
+    }
+
+    public void createTable() throws SQLException {
+        userDao.createTable();
+    }
 
 }

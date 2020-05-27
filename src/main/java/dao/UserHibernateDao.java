@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import util.DBHelper;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserHibernateDao implements UserDao {
@@ -39,7 +40,7 @@ public class UserHibernateDao implements UserDao {
         }
     }
 
-    public User getUser(String name) {
+    public User getUserByName(String name) {
         Session session = sessionFactory.openSession();
         String hql = "FROM User WHERE name =: name";
         Query query = session.createQuery(hql);
@@ -49,6 +50,11 @@ public class UserHibernateDao implements UserDao {
         return user;
     }
 
+    @Override
+    public void createTable() {
+
+    }
+
     public List getAllUsers() {
         Session session = sessionFactory.openSession();
         List temp = session.createQuery("FROM User").list();
@@ -56,15 +62,14 @@ public class UserHibernateDao implements UserDao {
         return temp;
     }
 
-    public void deleteUser(User user) {
+    public void deleteUser(Long id) {
         Transaction transaction = null;
         Session session = sessionFactory.openSession();
         try {
             transaction = session.beginTransaction();
-            String hql = "DELETE FROM User WHERE name = :name and password = :password";
+            String hql = "DELETE FROM User WHERE id = :id";
             Query query = session.createQuery(hql);
-            query.setParameter("name", user.getName());
-            query.setParameter("password", user.getPassword());
+            query.setParameter("id", id);
             query.executeUpdate();
         } catch (RuntimeException e) {
             if (transaction != null) {
@@ -75,19 +80,17 @@ public class UserHibernateDao implements UserDao {
         }
     }
 
-    public void updateUser(User user, User oldUser) {
+    public void updateUser(Long id, String name, String password) {
         Transaction transaction = null;
         Session session = sessionFactory.openSession();
         try {
             transaction = session.beginTransaction();
             String hql = "UPDATE User SET name = :name, password = :password WHERE id =:id";
             Query query = session.createQuery(hql);
-            query.setParameter("name", user.getName());
-            query.setParameter("password", user.getPassword());
-            query.setParameter("id", oldUser.getId());
-            System.out.println(user.getName() + " " + user.getPassword() + " " + oldUser.getId());
+            query.setParameter("name", name);
+            query.setParameter("password", password);
+            query.setParameter("id", id);
             int o = query.executeUpdate();
-            System.out.println(o);
         } catch (RuntimeException e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -95,5 +98,16 @@ public class UserHibernateDao implements UserDao {
         } finally {
             session.close();
         }
+    }
+
+    @Override
+    public User getUser(Long id) throws SQLException {
+        Session session = sessionFactory.openSession();
+        String hql = "FROM User WHERE id =:id";
+        Query query = session.createQuery(hql);
+        query.setParameter("id", id);
+        User user = (User) query.uniqueResult();
+        session.close();
+        return user;
     }
 }

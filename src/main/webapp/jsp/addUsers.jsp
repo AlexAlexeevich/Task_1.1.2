@@ -14,7 +14,7 @@
 </head>
 <body>
 <h1>Add users</h1>
-<form method="post" action="/">
+<form method="post" action="${pageContext.request.contextPath}/admin/addUsers">
     <table cellspacing="0" border="1">
         <tr>
             <td>User Name:</td>
@@ -23,6 +23,10 @@
         <tr>
             <td>User Password:</td>
             <td><input type="password" id="password" name="password"></td>
+        </tr>
+        <tr>
+            <td>User Role:</td>
+            <td><input type="text" id="role" name="role"></td>
         </tr>
     </table>
     <br>
@@ -33,7 +37,7 @@
 </form>
 
 
-<a href="/showUsers">Show Users</a>
+<a href="${pageContext.request.contextPath}/admin">Show Users</a>
 
 
 </body>

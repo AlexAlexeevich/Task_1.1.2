@@ -1,38 +1,33 @@
 <%--
   Created by IntelliJ IDEA.
   User: Alex
-  Date: 08.05.2020
-  Time: 5:55
+  Date: 22.05.2020
+  Time: 2:18
   To change this template use File | Settings | File Templates.
 --%>
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" language="java" %>
 <html>
 <head>
     <title>Title</title>
 </head>
 <body>
-<h1>Update user</h1>
-<form method="post" action="/admin/updateUser">
+<h1>Login</h1>
+
+<form method="post" action="/login">
     <table cellspacing="0" border="1">
         <tr>
             <td>User Name:</td>
-            <td><input type="text" id="name" name="name" value="<c:out value="${name}" />"></td>
+            <td><input type="text" id="name" name="name"></td>
         </tr>
         <tr>
             <td>User Password:</td>
             <td><input type="password" id="password" name="password"></td>
         </tr>
     </table>
-    <input type="hidden" name="id" value="${id}">
-    <br>
-    <c:out value="${repeatInput}"/>
-    <br>
-    <br>
-    <input type="submit" value="Update"/>
-</form>
 
-<a href="/admin">Show Users</a>
+    <br>
+    <input type="submit" value="Login"/>
+</form>
 </body>
 </html>
